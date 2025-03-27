@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сотрудники</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Список сотрудников</h2>
+    <ul>
+        {% for employee in employees %}
+        <li>{{ employee.name }} - {{ employee.email }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('dashboard') }}" class="btn">Назад</a>
+</body>
+</html>

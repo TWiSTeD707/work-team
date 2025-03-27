@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель сотрудника</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+    <h2>Добро пожаловать, {{ current_user.name }}</h2>
+    <h3>Панель управления сотрудника</h3>
+
+    <div class="dashboard">
+        <div class="left">
+            <button onclick="location.href='{{ url_for('take_test') }}'" class="btn">Пройти тестирование</button>
+        </div>
+
+        <div class="right">
+            <h3>Профиль</h3>
+            <p><strong>ФИО:</strong> {{ current_user.name }}</p>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+            <p><strong>Компания:</strong> {{ current_user.comp_name }}</p>
+        </div>
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="btn red">Выйти</a>
+</body>
+</html>

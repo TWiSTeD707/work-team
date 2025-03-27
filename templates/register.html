@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+    <h2>Регистрация</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.role.label }} {{ form.role() }}
+        {{ form.name.label }} {{ form.name() }}
+        {{ form.email.label }} {{ form.email() }}
+        {{ form.comp_name.label }} {{ form.comp_name() }}
+        {{ form.password.label }} {{ form.password() }}
+        {{ form.confirm.label }} {{ form.confirm() }}
+        {{ form.submit(class="btn green") }}
+        <p>Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a></p>
+    </form>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты теста</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Результаты тестирования</h2>
+    <pre>{{ results }}</pre>
+    <a href="{{ url_for('dashboard') }}" class="btn">Назад</a>
+</body>
+</html>

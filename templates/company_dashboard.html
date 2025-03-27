@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель компании</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+</head>
+<body>
+    <h2>Добро пожаловать, {{ current_user.name }}</h2>
+    <h3>Панель управления компанией</h3>
+
+    <div class="dashboard">
+        <div class="left">
+            <button onclick="location.href='{{ url_for('view_employees') }}'" class="btn">Данные сотрудников</button>
+            <a href="{{ url_for('download_results') }}" class="btn">Скачать результаты теста</a>
+        </div>
+
+        <div class="right">
+            <h3>Профиль компании</h3>
+            <p><strong>Название:</strong> {{ current_user.name }}</p>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+            <button onclick="location.href='{{ url_for('create_test') }}'" class="btn green">Создать тестирование</button>
+        </div>
+    </div>
+
+    <a href="{{ url_for('logout') }}" class="btn red">Выйти</a>
+</body>
+</html>
