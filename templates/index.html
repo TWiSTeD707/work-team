@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Team</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Work team</h1>
+        <p>Платформа для формирования команд</p>
+    </header>
+
+    <section class="intro">
+        <h2>Создайте эффективную команду с помощью нейросети</h2>
+        <p>Автоматическое распределение сотрудников по психотипам</p>
+    </section>
+
+    <section class="buttons">
+        <div class="card">
+            <h3>Для компаний</h3>
+            <p>Управление сотрудниками и анализ команд <br> <br></p>
+            <a href="/login" class="btn-green">Войти</a>
+        </div>
+        <div class="card">
+            <h3>Для сотрудников</h3>
+            <p>Прохождение тестирования и личный профиль</p>
+            <a href="/register" class="btn-blue">Регистрация</a>
+        </div>
+    </section>
+
+    <section class="info">
+        <div class="info-card">
+            <h4>ИИ - Анализ</h4>
+            <p>Нейросеть анализирует психологические профили</p>
+        </div>
+        <div class="info-card">
+            <h4>Оптимизация команд</h4>
+            <p>Формирование эффективных групп</p>
+        </div>
+        <div class="info-card">
+            <h4>Портфолио</h4>
+            <p>Сохранение достижений в личном профиле</p>
+        </div>
+    </section>
+</div>
+</body>
+</html>
