@@ -2,27 +2,180 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Панель компании</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель компании | WorkTeam</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <!-- Добавляем Font Awesome для иконок -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h2>Добро пожаловать, {{ current_user.name }}</h2>
-    <h3>Панель управления компанией</h3>
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-building"></i> Добро пожаловать, {{ current_user.name }}</h2>
+            <p class="mb-20">Панель управления компанией</p>
 
-    <div class="dashboard">
-        <div class="left">
-            <button onclick="location.href='{{ url_for('view_employees') }}'" class="btn">Данные сотрудников</button>
-            <a href="{{ url_for('download_results') }}" class="btn">Скачать результаты теста</a>
-        </div>
+            <!-- Блок с flash-сообщениями -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                                <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-        <div class="right">
-            <h3>Профиль компании</h3>
-            <p><strong>Название:</strong> {{ current_user.name }}</p>
-            <p><strong>Email:</strong> {{ current_user.email }}</p>
-            <button onclick="location.href='{{ url_for('create_test') }}'" class="btn green">Создать тестирование</button>
+            <div class="dashboard">
+                <div class="left">
+                    <button onclick="location.href='{{ url_for('view_employees') }}'" class="btn btn-primary">
+                        <i class="fas fa-users"></i> Данные сотрудников
+                    </button>
+
+                    <button onclick="location.href='{{ url_for('create_test') }}'" class="btn btn-success">
+                        <i class="fas fa-plus-circle"></i> Создать тестирование
+                    </button>
+
+                    <!-- Блок активных тестирований -->
+                    <div class="card active-tests">
+                        <h4><i class="fas fa-clipboard-list"></i> Активные тестирования</h4>
+                        {% for test in active_tests %}
+                            <div class="test-item">
+                                <p><strong>ID:</strong> {{ test.id }}</p>
+                                <p><strong>Дата окончания:</strong> {{ test.end_date.strftime('%d.%m.%Y') }}</p>
+                                <button onclick="analyzeTest({{ test.id }})" class="btn btn-small btn-info">
+                                    <i class="fas fa-chart-bar"></i> Анализировать
+                                </button>
+                            </div>
+                        {% else %}
+                            <p>Нет активных тестирований</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="right">
+                    <h3><i class="fas fa-id-card"></i> Профиль компании</h3>
+                    <div class="profile-info">
+                        <p><strong><i class="fas fa-building"></i> Название:</strong> {{ current_user.name }}</p>
+                        <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ current_user.email }}</p>
+                        <p><strong><i class="fas fa-user-tag"></i> Роль:</strong> Компания</p>
+                    </div>
+
+                    <!-- Блок готовых отчетов -->
+                    <div class="reports">
+                        <h4><i class="fas fa-file-alt"></i> Доступные отчеты</h4>
+                        {% for report in available_reports %}
+                            <div class="report-item">
+                                <p><strong>Отчет #{{ report.id }}</strong> ({{ report.completed_at.strftime('%d.%m.%Y') }})</p>
+                                <a href="{{ url_for('download_report', analysis_id=report.id) }}" class="btn btn-small btn-secondary">
+                                    <i class="fas fa-download"></i> Скачать
+                                </a>
+                            </div>
+                        {% else %}
+                            <p>Нет доступных отчетов</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-20">
+                <a href="{{ url_for('logout') }}" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </div>
         </div>
     </div>
 
-    <a href="{{ url_for('logout') }}" class="btn red">Выйти</a>
+    <!-- Модальное окно для анализа -->
+    <div id="analysisModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Анализ тестирования</h3>
+            <div id="progressContainer">
+                <p id="progressMessage">Подготовка к анализу...</p>
+                <div class="progress-bar">
+                    <div id="progressBar" style="width:0%"></div>
+                </div>
+                <p id="progressPercent">0%</p>
+            </div>
+            <div id="resultContainer" style="display:none;">
+                <p id="resultMessage"></p>
+                <a id="downloadLink" href="#" class="btn btn-success" style="display:none;">
+                    <i class="fas fa-download"></i> Скачать отчет
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция для запуска анализа
+        function analyzeTest(testId) {
+            const modal = document.getElementById('analysisModal');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressMessage = document.getElementById('progressMessage');
+            const resultContainer = document.getElementById('resultContainer');
+            const resultMessage = document.getElementById('resultMessage');
+            const downloadLink = document.getElementById('downloadLink');
+
+            modal.style.display = "block";
+
+            fetch('/start_deepseek_analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({test_id: testId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.error) {
+                    progressMessage.textContent = 'Ошибка: ' + data.error;
+                    return;
+                }
+
+                const analysisId = data.analysis_id;
+                checkProgress(analysisId);
+
+                function checkProgress(id) {
+                    fetch('/api/analysis_status/' + id)
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.error) {
+                            progressMessage.textContent = 'Ошибка: ' + data.error;
+                            return;
+                        }
+
+                        if(data.completed) {
+                            progressBar.style.width = '100%';
+                            progressPercent.textContent = '100%';
+                            progressMessage.textContent = 'Анализ завершен!';
+
+                            resultMessage.textContent = 'Отчет успешно сгенерирован';
+                            downloadLink.href = '/download_report/' + id;
+                            downloadLink.style.display = 'inline-block';
+                            resultContainer.style.display = 'block';
+                        } else {
+                            progressBar.style.width = data.progress + '%';
+                            progressPercent.textContent = data.progress + '%';
+                            progressMessage.textContent = data.message;
+                            setTimeout(() => checkProgress(id), 2000);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Закрытие модального окна
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('analysisModal').style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('analysisModal')) {
+                document.getElementById('analysisModal').style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
