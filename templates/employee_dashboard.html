@@ -2,26 +2,103 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Панель сотрудника</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель сотрудника | WorkTeam</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h2>Добро пожаловать, {{ current_user.name }}</h2>
-    <h3>Панель управления сотрудника</h3>
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-user"></i> Добро пожаловать, {{ current_user.name }}</h2>
+            <p class="mb-20">Панель управления сотрудника</p>
 
-    <div class="dashboard">
-        <div class="left">
-            <button onclick="location.href='{{ url_for('take_test') }}'" class="btn">Пройти тестирование</button>
-        </div>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                                <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-        <div class="right">
-            <h3>Профиль</h3>
-            <p><strong>ФИО:</strong> {{ current_user.name }}</p>
-            <p><strong>Email:</strong> {{ current_user.email }}</p>
-            <p><strong>Компания:</strong> {{ current_user.comp_name }}</p>
+            <div class="dashboard">
+                <div class="left">
+                    {% if current_user.test_link and datetime.now() < current_user.test_expires %}
+                    <button onclick="location.href='{{ url_for('take_test') }}'" class="btn btn-primary">
+                        <i class="fas fa-pencil-alt"></i> Пройти тестирование
+                    </button>
+                    {% else %}
+                    <div class="alert alert-info">
+                        В настоящее время нет активных тестов
+                    </div>
+                    {% endif %}
+
+                    <div class="card">
+                        <h4><i class="fas fa-chart-line"></i> Последние результаты</h4>
+                        <div id="resultsContainer">
+                            <p>Загрузка результатов...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <h3><i class="fas fa-id-card"></i> Профиль</h3>
+                    <div class="profile-info">
+                        <p><strong><i class="fas fa-user"></i> ФИО:</strong> {{ current_user.name }}</p>
+                        <p><strong><i class="fas fa-envelope"></i> Email:</strong> {{ current_user.email }}</p>
+                        <p><strong><i class="fas fa-building"></i> Компания:</strong> {{ current_user.comp_name }}</p>
+                        <p><strong><i class="fas fa-user-tag"></i> Роль:</strong> Сотрудник</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-20">
+                <a href="{{ url_for('logout') }}" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+            </div>
         </div>
     </div>
 
-    <a href="{{ url_for('logout') }}" class="btn red">Выйти</a>
+    <script>
+        // Загрузка результатов тестов
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/employee/results')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('resultsContainer');
+
+                    if(data.error) {
+                        container.innerHTML = `<p class="alert alert-danger">${data.error}</p>`;
+                        return;
+                    }
+
+                    if(data.length === 0) {
+                        container.innerHTML = '<p>Нет данных о пройденных тестах</p>';
+                        return;
+                    }
+
+                    let html = '<div class="test-results">';
+                    data.forEach(result => {
+                        html += `
+                            <div class="test-result-item">
+                                <p><strong>Тест #${result.test_id}</strong> (${result.date})</p>
+                                <p>Средний балл: ${result.score}</p>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    container.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('resultsContainer').innerHTML =
+                        '<p class="alert alert-danger">Ошибка загрузки результатов</p>';
+                });
+        });
+    </script>
 </body>
 </html>
