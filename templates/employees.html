@@ -2,16 +2,55 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Сотрудники</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сотрудники | WorkTeam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <h2>Список сотрудников</h2>
-    <ul>
-        {% for employee in employees %}
-        <li>{{ employee.name }} - {{ employee.email }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('dashboard') }}" class="btn">Назад</a>
+    <div class="container">
+        <div class="card">
+            <h2><i class="fas fa-users"></i> Список сотрудников</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                                <span class="close-btn" onclick="this.parentElement.style.display='none'">&times;</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <div class="employee-list">
+                {% for employee in employees %}
+                <div class="employee-item">
+                    <div>
+                        <strong><i class="fas fa-user"></i> {{ employee.name }}</strong>
+                        <span><i class="fas fa-envelope"></i> {{ employee.email }}</span>
+                    </div>
+                    <div>
+                        <button onclick="viewEmployeeResults({{ employee.id }})" class="btn btn-info btn-small">
+                            <i class="fas fa-chart-bar"></i> Результаты
+                        </button>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    Нет зарегистрированных сотрудников
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="mt-20">
+                <a href="{{ url_for('company_dashboard') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> Назад в панель
+                </a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
