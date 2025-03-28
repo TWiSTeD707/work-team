@@ -3,48 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Team</title>
+    <title>Work Team - Платформа для формирования команд</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<div class="container">
-    <header>
-        <h1>Work team</h1>
-        <p>Платформа для формирования команд</p>
-    </header>
+    <div class="background-animation">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
 
-    <section class="intro">
-        <h2>Создайте эффективную команду с помощью нейросети</h2>
-        <p>Автоматическое распределение сотрудников по психотипам</p>
-    </section>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-users"></i>
+                <span>WorkTeam</span>
+            </div>
+            <nav class="nav">
+                <a href="#features">Возможности</a>
+                <a href="#about">О проекте</a>
+                <a href="/login" class="login-btn">Вход</a>
+            </nav>
+        </header>
 
-    <section class="buttons">
-        <div class="card">
-            <h3>Для компаний</h3>
-            <p>Управление сотрудниками и анализ команд <br> <br></p>
-            <a href="/login" class="btn-green">Войти</a>
-        </div>
-        <div class="card">
-            <h3>Для сотрудников</h3>
-            <p>Прохождение тестирования и личный профиль</p>
-            <a href="/register" class="btn-blue">Регистрация</a>
-        </div>
-    </section>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Создавайте идеальные команды <br> с поддержкой ИИ</h1>
+                <p class="subtitle">Автоматическое распределение сотрудников по психотипам для максимальной эффективности</p>
+                <div class="cta-buttons">
+                    <a href="/login" class="btn btn-primary">Вход</a>
+                    <a href="/register" class="btn btn-secondary">Регистрация</a>
+                </div>
+            </div>
+        </section>
 
-    <section class="info">
-        <div class="info-card">
-            <h4>ИИ - Анализ</h4>
-            <p>Нейросеть анализирует психологические профили</p>
-        </div>
-        <div class="info-card">
-            <h4>Оптимизация команд</h4>
-            <p>Формирование эффективных групп</p>
-        </div>
-        <div class="info-card">
-            <h4>Портфолио</h4>
-            <p>Сохранение достижений в личном профиле</p>
-        </div>
-    </section>
-</div>
+        <section id="features" class="features">
+            <h2 class="section-title">Наши возможности</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>ИИ-анализ</h3>
+                    <p>Наша нейросеть анализирует психологические профили сотрудников для оптимального распределения</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Оптимизация команд</h3>
+                    <p>Формирование сбалансированных групп с учетом психологической совместимости</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>Личный профиль</h3>
+                    <p>Каждый сотрудник получает личный профиль для прохождения тестирования</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>Управление проектами</h3>
+                    <p>Распределение сотрудников по проектам с учетом их сильных сторон</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <div class="about-content">
+                <h2 class="section-title">Как это работает?</h2>
+                <ol class="steps">
+                    <li>
+                        <span class="step-number">1</span>
+                        <p>Сотрудники проходят психологическое тестирование</p>
+                    </li>
+                    <li>
+                        <span class="step-number">2</span>
+                        <p>Наш ИИ анализирует результаты и определяет психотипы</p>
+                    </li>
+                    <li>
+                        <span class="step-number">3</span>
+                        <p>Система предлагает оптимальные комбинации сотрудников</p>
+                    </li>
+                    <li>
+                        <span class="step-number">4</span>
+                        <p>Вы формируете команды с максимальной эффективностью</p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <h2 class="section-title">Отзывы наших клиентов</h2>
+        </section>
+
+        <section class="cta">
+            <h2>Готовы улучшить работу вашей команды?</h2>
+            <p>Начните использовать WorkTeam уже сегодня</p>
+            <div class="cta-buttons">
+                <a href="/register" class="btn btn-large btn-primary">Зарегистрироваться</a>
+                <a href="/login" class="btn btn-large btn-outline">Войти</a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-users"></i>
+                    <span>WorkTeam</span>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Компания</h4>
+                        <a href="#">О нас</a>
+                        <a href="#">Контакты</a>
+                        <a href="#">Вакансии</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Ресурсы</h4>
+                        <a href="#">Документация</a>
+                        <a href="#">Блог</a>
+                        <a href="#">Поддержка</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Правовая информация</h4>
+                        <a href="#">Политика конфиденциальности</a>
+                        <a href="#">Условия использования</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 WorkTeam. Все права защищены.</p>
+                <div class="social-links">
+                </div>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>
